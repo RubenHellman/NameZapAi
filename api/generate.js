@@ -1,46 +1,77 @@
-import OpenAI from 'openai';
+import { Configuration, OpenAIApi } from "openai";
 
-const openai = new OpenAI({
+const fallbackNames = [
+  "BrightIdea AI",
+  "QuickName",
+  "SparkLab",
+  "IdeaForge",
+  "NameNest",
+  "BrainWave AI",
+  "NameQuest",
+  "InnoName",
+  "Brandify",
+  "NameRocket",
+];
+
+const configuration = new Configuration({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
+const openai = new OpenAIApi(configuration);
+
 export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    res.status(405).json({ error: 'Method not allowed' });
+  if (req.method !== "POST") {
+    res.status(405).json({ error: "Only POST requests allowed" });
     return;
   }
 
-  const { prompt, genre } = req.body;
+  const { description, genre } = req.body;
 
-  if (!prompt || !genre) {
-    res.status(400).json({ error: 'Missing prompt or genre' });
+  if (!description) {
+    res.status(400).json({ error: "Missing description in request body" });
     return;
   }
-
-  const systemMessage = `You are a creative assistant that generates catchy, original startup or business names based on the user's description and genre. Return a JSON array of 8 short name suggestions.`;
 
   try {
-    const completion = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
-      messages: [
-        { role: 'system', content: systemMessage },
-        { role: 'user', content: `Description: ${prompt}\nGenre: ${genre}` },
-      ],
-      temperature: 0.8,
-      max_tokens: 200,
-    });
-
-    const text = completion.choices[0].message.content;
-
-    let names = [];
-    try {
-      names = JSON.parse(text);
-    } catch {
-      names = text.split('\n').filter(Boolean).map(s => s.trim().replace(/^[-\d.\s]+/, ''));
+    if (!process.env.OPENAI_API_KEY) {
+      throw new Error("Missing OpenAI API Key");
     }
 
-    res.status(200).json({ names: names.slice(0, 8) });
+    // Skapa prompt baserat på input
+    let prompt = `Generate 10 creative and catchy business names`;
+    if (genre) {
+      prompt += ` for a business in the genre: ${genre}`;
+    }
+    prompt += `, related to: ${description}. Keep names short and unique.`;
+
+    // Skicka förfrågan till OpenAI
+    const completion = await openai.createCompletion({
+      model: "gpt-4o-mini",
+      prompt,
+      max_tokens: 100,
+      temperature: 0.8,
+      n: 1,
+      stop: null,
+    });
+
+    let namesText = completion.data.choices[0].text;
+
+    // Dela upp resultatet till en array på nya rader
+    let names = namesText
+      .split("\n")
+      .map((name) => name.replace(/^\d+[\).\-\s]+/, "").trim()) // Ta bort eventuella nummer i början
+      .filter((name) => name.length > 0);
+
+    // Om inga namn returneras, fallback
+    if (names.length === 0) {
+      names = fallbackNames;
+    }
+
+    res.status(200).json({ names });
   } catch (error) {
-    res.status(500).json({ error: 'OpenAI API error: ' + error.message });
+    console.error("OpenAI API error, using fallback names:", error.message);
+    // Skicka fallback-namn vid fel
+    res.status(200).json({ names: fallbackNames });
   }
 }
+
