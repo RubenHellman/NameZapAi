@@ -1,224 +1,154 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>NameZapAI - Smart Name Generator</title>
-<style>
-   /* Basic reset and fonts */
-   body {
-     margin: 0; padding: 0;
-     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-     background: #f5f7fa;
-     color: #333;
-     display: flex;
-     flex-direction: column;
-     min-height: 100vh;
-   }
-   header {
-     background: #3a86ff;
-     color: white;
-     padding: 1rem 2rem;
-     text-align: center;
-     font-weight: 700;
-     font-size: 1.8rem;
-     box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-   }
-   main {
-     flex: 1;
-     max-width: 720px;
-     margin: 2rem auto;
-     background: white;
-     padding: 2rem;
-     border-radius: 12px;
-     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-   }
-   label {
-     font-weight: 600;
-     margin-bottom: 0.5rem;
-     display: block;
-   }
-   input[type="text"] {
-     width: 100%;
-     font-size: 1.1rem;
-     padding: 0.6rem 0.8rem;
-     border: 2px solid #3a86ff;
-     border-radius: 8px;
-     margin-bottom: 1rem;
-     box-sizing: border-box;
-     transition: border-color 0.3s ease;
-   }
-   input[type="text"]:focus {
-     outline: none;
-     border-color: #ff006e;
-   }
-   .genre-list {
-     margin-bottom: 1rem;
-   }
-   .genre-list button {
-     margin: 0.3rem 0.3rem 0.3rem 0;
-     padding: 0.4rem 0.8rem;
-     border: none;
-     background: #3a86ff;
-     color: white;
-     border-radius: 20px;
-     cursor: pointer;
-     font-weight: 600;
-     transition: background-color 0.3s ease;
-   }
-   .genre-list button:hover {
-     background: #ff006e;
-   }
-   .genre-list button.selected {
-     background: #ff006e;
-   }
-   button#generateBtn {
-     background: #ff006e;
-     border: none;
-     color: white;
-     padding: 0.8rem 2rem;
-     font-size: 1.2rem;
-     border-radius: 30px;
-     cursor: pointer;
-     font-weight: 700;
-     margin-bottom: 1rem;
-     transition: background-color 0.3s ease;
-     width: 100%;
-   }
-   button#generateBtn:hover {
-     background: #3a86ff;
-   }
-   #results {
-     list-style: none;
-     padding: 0;
-     margin: 0;
-   }
-   #results li {
-     background: #e3f2fd;
-     margin-bottom: 0.5rem;
-     padding: 0.8rem 1rem;
-     border-radius: 8px;
-     display: flex;
-     justify-content: space-between;
-     align-items: center;
-     font-weight: 600;
-     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-   }
-   #results li.premium {
-     background: #fce4ec;
-     font-style: italic;
-     color: #d81b60;
-     cursor: default;
-   }
-   .fav-btn {
-     background: transparent;
-     border: none;
-     font-size: 1.3rem;
-     cursor: pointer;
-     color: #d81b60;
-     transition: color 0.3s ease;
-   }
-   .fav-btn.favorited {
-     color: #ff4081;
-   }
-   footer {
-     text-align: center;
-     padding: 1rem 2rem;
-     font-size: 0.9rem;
-     color: #777;
-     background: #eee;
-     margin-top: auto;
-   }
-   /* Responsive adjustments */
-   @media (max-width: 480px) {
-     main {
-       margin: 1rem;
-       padding: 1rem;
-     }
-     button#generateBtn {
-       font-size: 1rem;
-       padding: 0.7rem 1rem;
-     }
-   }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NameZapai - AI-powered Name Generator</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f0f4f8;
+      color: #333;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+    h1 {
+      color: #0077cc;
+    }
+    label {
+      font-weight: bold;
+      margin-top: 15px;
+      display: block;
+    }
+    input[type="text"], select {
+      padding: 10px;
+      width: 250px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1em;
+      transition: border-color 0.3s;
+    }
+    input[type="text"]:focus, select:focus {
+      border-color: #0077cc;
+      outline: none;
+    }
+    button {
+      margin-top: 20px;
+      background-color: #0077cc;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      font-size: 1em;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #005fa3;
+    }
+    #result {
+      margin-top: 30px;
+      font-size: 1.5em;
+      font-weight: 600;
+      color: #004a80;
+      min-height: 2em;
+    }
+    footer {
+      margin-top: auto;
+      font-size: 0.9em;
+      color: #777;
+    }
+    @media (max-width: 400px) {
+      input[type="text"], select {
+        width: 100%;
+      }
+    }
+  </style>
 </head>
 <body>
-<header>
- NameZapAI – Smart AI Name Generator
-</header>
-<main>
-<label for="descriptionInput">Describe your company or idea:</label>
-<input type="text" id="descriptionInput" placeholder="e.g. school app, fitness coach, fashion blog" />
-<div class="genre-list" aria-label="Pick a genre">
-<button data-genre="startup">Startup</button>
-<button data-genre="fantasy">Fantasy</button>
-<button data-genre="band">Band</button>
-<button data-genre="tech">Tech</button>
-<button data-genre="ai">AI</button>
-<button data-genre="game">Game</button>
-</div>
-<button id="generateBtn">Generate Names</button>
-<ul id="results" aria-live="polite"></ul>
-</main>
-<footer>
-&copy; 2025 NameZapAI by You
-</footer>
-<script>
- // ===== Data: lists of name parts by genre =====
- const nameParts = {
-   startup: [
-     "Boost", "Nex", "Elevate", "Venture", "Spark", "Pulse", "Shift", "Launch", "Orbit", "Rise"
-   ],
-   fantasy: [
-     "Dragon", "Mystic", "Shadow", "Elder", "Frost", "Fire", "Rune", "Storm", "Thorn", "Moon"
-   ],
-   band: [
-     "Echo", "Rhythm", "Beat", "Vibe", "Chord", "Groove", "Pulse", "Fusion", "Blast", "Harmony"
-   ],
-   tech: [
-     "Byte", "Cloud", "Core", "Matrix", "Quantum", "Pixel", "Data", "Circuit", "Logic", "Grid"
-   ],
-   ai: [
-     "Neura", "Cortex", "Synth", "Algo", "Deep", "Intel", "Bot", "Sense", "Vision", "Code"
-   ],
-   game: [
-     "Quest", "Level", "Pixel", "Hero", "Arena", "Blade", "Epic", "Legend", "Strike", "Nexus"
-   ]
- };
- // ===== Store favorites in localStorage =====
- let favorites = JSON.parse(localStorage.getItem('namezapai_favorites')) || {};
- // ===== Helper: Save favorites to localStorage =====
- function saveFavorites() {
-   localStorage.setItem('namezapai_favorites', JSON.stringify(favorites));
- }
- // ===== Generate names based on input and genre =====
- function generateNames(description, genre) {
-   const desc = description.trim();
-   let names = [];
-   if(desc.length > 0) {
-     // 1) Use the description in different ways to create names
-     const baseWords = desc.split(/\s+/).map(w => capitalize(w));
-     // Combine baseWords with AI words or genre words
-     const suffixes = (genre && nameParts[genre]) ? nameParts[genre] : [];
-     // Create variants:
-     // Example patterns:
-     // - description + suffix
-     // - suffix + description
-     // - description + "AI"
-     // - suffix + "AI"
-     // - description without spaces + suffix
-     // - description + random number
-     for(let i = 0; i < 15; i++) {
-       const suffix = suffixes.length ? suffixes[Math.floor(Math.random() * suffixes.length)] : "";
-       const randNum = Math.floor(Math.random()*99)+1;
-       let name = "";
-       const pattern = i % 6;
-       switch(pattern) {
-         case 0:
-           name = baseWords.join("") + suffix;
-           break;
-         case 1:
-           name = suffix + baseWords.join("");
-           break;
-         case 2:
-           name = baseWords.join("") + "AI
+  <h1>NameZapai</h1>
+  <p>AI-powered business name generator</p>
+
+  <label for="industryInput">Describe your business or idea (optional):</label>
+  <input type="text" id="industryInput" placeholder="E.g. school app, coffee shop, fitness" />
+
+  <label for="genreSelect">Choose a name style / genre:</label>
+  <select id="genreSelect">
+    <option value="tech">Tech & Startup</option>
+    <option value="funny">Funny & Playful</option>
+    <option value="luxury">Luxury & Elegant</option>
+    <option value="nature">Nature Inspired</option>
+    <option value="classic">Classic & Simple</option>
+  </select>
+
+  <button id="generateBtn">Generate Name</button>
+
+  <div id="result"></div>
+
+  <footer>
+    &copy; 2025 NameZapai - Made with ❤️ by You
+  </footer>
+
+  <script>
+    const namesData = {
+      tech: [
+        "ByteWave", "CodeNest", "AppVibe", "NetNova", "PixelForge", 
+        "CloudSprint", "DataPulse", "LinkLabs", "ZapLogic", "QuantumLeap"
+      ],
+      funny: [
+        "FunkyMonkey", "WobbleWorks", "GiggleGear", "QuirkQuest", "JollyJams",
+        "SillySquid", "BubblyBeard", "SnappySnail", "DizzyDodo", "PeppyPenguin"
+      ],
+      luxury: [
+        "Elysian", "Veloura", "Aurelia", "LuxeNova", "Opalith",
+        "Serenara", "Crestwell", "Gildora", "Vermillion", "Silvaris"
+      ],
+      nature: [
+        "GreenSprout", "BlueHaven", "SunPetal", "LeafWave", "RiverStone",
+        "WildBloom", "MossyRoot", "SkyFern", "EarthSong", "OceanBreeze"
+      ],
+      classic: [
+        "Evergreen", "Brightway", "Clearfield", "Maplewood", "Stonebridge",
+        "Pinehill", "Oakwood", "Sunridge", "Millbrook", "Willowdale"
+      ],
+    };
+
+    const industryInput = document.getElementById("industryInput");
+    const genreSelect = document.getElementById("genreSelect");
+    const generateBtn = document.getElementById("generateBtn");
+    const resultDiv = document.getElementById("result");
+
+    function generateName() {
+      const industry = industryInput.value.trim();
+      const genre = genreSelect.value;
+      const namesArray = namesData[genre];
+
+      let name = namesArray[Math.floor(Math.random() * namesArray.length)];
+
+      if (industry) {
+        // Add industry as prefix or suffix randomly
+        const usePrefix = Math.random() < 0.5;
+        if (usePrefix) {
+          name = industry.replace(/\s+/g, '') + name;
+        } else {
+          name = name + industry.replace(/\s+/g, '');
+        }
+      }
+
+      // Capitalize first letter of each word (just in case)
+      name = name.split(/(?=[A-Z])|(?=[0-9])/).map(word => 
+        word.charAt(0).toUpperCase() + word.slice(1)
+      ).join('');
+
+      resultDiv.textContent = name;
+    }
+
+    generateBtn.addEventListener("click", generateName);
+  </script>
+</body>
+</html>
