@@ -1,176 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>NameZapAI – Smart AI Name Generator</title>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap" rel="stylesheet"/>
+  <title>NameZapAI - AI Business Name Generator</title>
   <style>
     body {
       margin: 0;
-      font-family: 'Outfit', sans-serif;
-      background: linear-gradient(160deg, #0e0e0e, #1e1e2e);
-      color: #ffffff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #0e0e10;
+      color: #f0f0f5;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 2rem;
       min-height: 100vh;
     }
 
+    header {
+      text-align: center;
+      padding: 40px 20px;
+    }
+
     h1 {
+      color: #00d8ff;
       font-size: 3rem;
-      color: #00f5a0;
-      margin-bottom: 0.2rem;
-      text-shadow: 0 0 5px #00f5a055;
+      margin-bottom: 0.5em;
     }
 
-    p.sub {
+    p {
+      color: #ccc;
+      font-size: 1.2rem;
+    }
+
+    input, button, select {
+      padding: 12px;
+      border-radius: 6px;
       font-size: 1rem;
-      color: #aaa;
-      margin-bottom: 2rem;
-    }
-
-    .input-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      justify-content: center;
-      margin-bottom: 1.5rem;
-    }
-
-    input, select, button {
-      padding: 0.75rem 1rem;
-      font-size: 1rem;
+      margin: 10px;
       border: none;
-      border-radius: 8px;
       outline: none;
     }
 
-    input, select {
-      background: #2d2d2d;
-      color: #fff;
+    input {
+      width: 300px;
     }
 
     button {
-      background: linear-gradient(135deg, #00f5a0, #00d9f5);
-      color: #000;
-      font-weight: bold;
+      background-color: #00d8ff;
+      color: black;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: 0.3s;
     }
 
     button:hover {
-      transform: scale(1.05);
+      background-color: #02b3d9;
     }
 
-    .results {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 1rem;
-      margin-top: 2rem;
-      width: 100%;
-      max-width: 1000px;
+    #results {
+      margin-top: 30px;
+      max-width: 600px;
+      text-align: left;
     }
 
-    .name-card {
-      background: #292929;
-      border-radius: 10px;
-      padding: 1rem;
-      text-align: center;
-      transition: 0.2s;
-      cursor: pointer;
-      border: 2px solid #00f5a033;
-    }
-
-    .name-card:hover {
-      background-color: #333;
-      border-color: #00f5a0;
-    }
-
-    .loading {
-      margin-top: 2rem;
+    .name-box {
+      background: #1e1e26;
+      margin: 8px 0;
+      padding: 10px 15px;
+      border-left: 4px solid #00d8ff;
+      border-radius: 4px;
       font-size: 1.1rem;
-      color: #aaa;
     }
 
     footer {
       margin-top: auto;
-      padding: 1rem;
-      font-size: 0.85rem;
-      color: #888;
+      padding: 20px;
+      color: #555;
+    }
+
+    @media (max-width: 600px) {
+      input {
+        width: 90%;
+      }
     }
   </style>
 </head>
 <body>
-  <h1>NameZapAI ⚡</h1>
-  <p class="sub">Create awesome, catchy, and AI-powered brand names in seconds</p>
-
-  <div class="input-group">
-    <input type="text" id="topicInput" placeholder="What's your idea about? (e.g. coffee shop)" />
-    <select id="genreSelect">
-      <option value="creative">🎨 Creative</option>
-      <option value="modern">🚀 Modern</option>
-      <option value="funny">😂 Funny</option>
-      <option value="luxury">💎 Luxury</option>
-      <option value="tech">🤖 Tech</option>
-    </select>
+  <header>
+    <h1>NameZapAI ⚡</h1>
+    <p>Generate cool, creative names for your app, startup or product using AI</p>
+    <input id="ideaInput" placeholder="e.g. app for students, coffee shop..." />
     <button onclick="generateNames()">Generate</button>
-  </div>
+    <div id="results"></div>
+  </header>
 
-  <div id="loading" class="loading" style="display: none;">✨ Generating your brand names...</div>
-  <div id="results" class="results"></div>
-
-  <footer>
-    Built with ❤️ by NameZapAI · © 2025
-  </footer>
+  <footer>Made with ❤️ using GPT-4o | <a style="color:#00d8ff;" href="https://github.com/">GitHub</a></footer>
 
   <script>
-    const nameBank = {
-      creative: ["Nova", "Twist", "Spark", "Quirk", "Loom", "Vibe", "Zuno", "Bloop", "Orbix", "Nimble"],
-      modern: ["Zyn", "Modo", "Nexa", "Lift", "Revo", "Hexa", "Glint", "Dap", "Zentri", "Ruvo"],
-      funny: ["Wacky", "Bork", "Snappy", "Zapster", "Goofyfy", "LOLify", "Memez", "Swoosh", "Bloopify", "Zoodle"],
-      luxury: ["Noiré", "Velure", "Zéphyr", "Auryn", "Opula", "Elysian", "Serré", "Lumé", "Prestia", "Luxo"],
-      tech: ["Neurozap", "Techly", "Botcore", "Nexiq", "Codexa", "Aiogen", "Zentrix", "Bytefy", "Deepify", "Logicor"]
-    };
+    async function generateNames() {
+      const idea = document.getElementById('ideaInput').value;
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = '<p>Loading suggestions...</p>';
 
-    function generateNames() {
-      const topic = document.getElementById("topicInput").value.trim();
-      const genre = document.getElementById("genreSelect").value;
-      const resultsDiv = document.getElementById("results");
-      const loading = document.getElementById("loading");
-
-      resultsDiv.innerHTML = "";
-      loading.style.display = "block";
-
-      setTimeout(() => {
-        const base = nameBank[genre];
-        const randomNames = [];
-
-        while (randomNames.length < 12) {
-          const randomName = base[Math.floor(Math.random() * base.length)];
-          const formatted = Math.random() > 0.5
-            ? `${randomName} ${topic}`
-            : `${randomName}`;
-          if (!randomNames.includes(formatted)) {
-            randomNames.push(formatted);
-          }
-        }
-
-        loading.style.display = "none";
-
-        randomNames.forEach(name => {
-          const card = document.createElement("div");
-          card.className = "name-card";
-          card.textContent = name;
-          card.onclick = () => {
-            navigator.clipboard.writeText(name);
-            card.textContent = "✅ Copied: " + name;
-            setTimeout(() => (card.textContent = name), 1200);
-          };
-          resultsDiv.appendChild(card);
+      try {
+        const res = await fetch('/api/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ description: idea })
         });
-      }, 800); // Fake loading delay
+
+        const data = await res.json();
+
+        if (data.suggestions.length > 0) {
+          resultsDiv.innerHTML = '';
+          data.suggestions.forEach(name => {
+            resultsDiv.innerHTML += `<div class="name-box">${name}</div>`;
+          });
+        } else {
+          resultsDiv.innerHTML = '<p>No names found.</p>';
+        }
+      } catch (e) {
+        console.log(e);
+        resultsDiv.innerHTML = `<p>Error fetching AI results. Here's a random fallback:</p>`;
+        const fallback = [
+          "Zapster", "BrandForge", "NameNova", "GenieName", "NamePulse",
+          "AppSpark", "Zapify", "NameCrate", "ThinkZap", "BrandBot"
+        ];
+        fallback.forEach(name => {
+          resultsDiv.innerHTML += `<div class="name-box">${name}</div>`;
+        });
+      }
     }
   </script>
 </body>
