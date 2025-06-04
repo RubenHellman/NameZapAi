@@ -1,135 +1,236 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sv">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>NameZapAI - AI Business Name Generator</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #0e0e10;
-      color: #f0f0f5;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" /> <title>NameZapAI - Kreativ AI Namngenerator</title>
 
-    header {
-      text-align: center;
-      padding: 40px 20px;
-    }
+<!-- Google Font: Poppins (mjukt, humanistiskt) --> <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
 
+<style>
+  /* --- Grundinställningar --- */
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #1a1c2c, #23243a, #2e2f4a);
+    color: #e0e0e0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2.5rem 1rem 3rem;
+  }
+
+  h1 {
+    font-weight: 600;
+    font-size: 3rem;
+    margin-bottom: 0.2rem;
+    color: #ff7f50;
+    text-shadow: 0 0 8px #ff7f50aa;
+  }
+
+  p.subtitle {
+    font-weight: 400;
+    font-size: 1.2rem;
+    margin: 0 0 2rem;
+    color: #cfcfcfaa;
+    text-align: center;
+    max-width: 600px;
+  }
+
+  /* --- Formulär & Input --- */
+  .input-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    max-width: 650px;
+    width: 100%;
+    margin-bottom: 2rem;
+  }
+
+  input[type="text"], select {
+    flex: 1 1 250px;
+    padding: 0.85rem 1.25rem;
+    font-size: 1.1rem;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    background-color: #3a3b58;
+    color: #f0f0f0;
+    box-shadow: inset 0 0 6px #000000aa;
+    transition: box-shadow 0.3s ease;
+    font-weight: 400;
+  }
+
+  input[type="text"]:focus, select:focus {
+    box-shadow: 0 0 12px #ff7f50;
+    background-color: #44455d;
+  }
+
+  button#generateBtn {
+    background: #ff7f50;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-weight: 600;
+    font-size: 1.2rem;
+    padding: 0 1.8rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+    flex: 0 0 150px;
+  }
+
+  button#generateBtn:hover:not(:disabled),
+  button#generateBtn:focus:not(:disabled) {
+    background-color: #ff6347;
+    outline: none;
+    transform: scale(1.05);
+  }
+
+  button#generateBtn:disabled {
+    background-color: #b26a56;
+    cursor: not-allowed;
+  }
+
+  /* --- Resultatlista --- */
+  #results {
+    max-width: 650px;
+    width: 100%;
+    background: rgba(255 255 255 / 0.05);
+    border-radius: 14px;
+    box-shadow: 0 0 20px rgba(255,127,80,0.25);
+    padding: 1.5rem 1rem;
+    min-height: 80px;
+  }
+
+  .name-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.7rem 1rem;
+    border-bottom: 1px solid #ff7f5077;
+    color: #ffb59a;
+    font-size: 1.25rem;
+    font-weight: 500;
+  }
+
+  .name-item:last-child {
+    border-bottom: none;
+  }
+
+  .copy-btn {
+    background-color: #ff7f50;
+    border: none;
+    color: white;
+    padding: 0.3rem 0.9rem;
+    border-radius: 7px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.25s ease;
+  }
+
+  .copy-btn:hover {
+    background-color: #ff6347;
+  }
+
+  /* --- Felmeddelande --- */
+  #errorMsg {
+    color: #ff6b6b;
+    font-weight: 600;
+    margin-top: 1rem;
+    text-align: center;
+    min-height: 24px;
+  }
+
+  /* --- Laddningsindikator --- */
+  #loading {
+    margin: 0 auto;
+    margin-top: 1rem;
+    border: 4px solid rgba(255, 127, 80, 0.3);
+    border-top: 4px solid #ff7f50;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg);}
+    100% { transform: rotate(360deg);}
+  }
+
+  /* --- Responsiv mobil --- */
+  @media (max-width: 720px) {
     h1 {
-      color: #00d8ff;
-      font-size: 3rem;
-      margin-bottom: 0.5em;
+      font-size: 2.4rem;
     }
-
-    p {
-      color: #ccc;
-      font-size: 1.2rem;
-    }
-
-    input, button, select {
-      padding: 12px;
-      border-radius: 6px;
+    p.subtitle {
       font-size: 1rem;
-      margin: 10px;
-      border: none;
-      outline: none;
     }
 
-    input {
-      width: 300px;
+    .input-group {
+      flex-direction: column;
     }
 
-    button {
-      background-color: #00d8ff;
-      color: black;
-      cursor: pointer;
-      transition: 0.3s;
+    button#generateBtn {
+      flex: 1 1 auto;
+      width: 100%;
+      padding: 1rem 0;
     }
+  }
+</style>
 
-    button:hover {
-      background-color: #02b3d9;
-    }
-
-    #results {
-      margin-top: 30px;
-      max-width: 600px;
-      text-align: left;
-    }
-
-    .name-box {
-      background: #1e1e26;
-      margin: 8px 0;
-      padding: 10px 15px;
-      border-left: 4px solid #00d8ff;
-      border-radius: 4px;
-      font-size: 1.1rem;
-    }
-
-    footer {
-      margin-top: auto;
-      padding: 20px;
-      color: #555;
-    }
-
-    @media (max-width: 600px) {
-      input {
-        width: 90%;
-      }
-    }
-  </style>
 </head>
 <body>
-  <header>
-    <h1>NameZapAI ⚡</h1>
-    <p>Generate cool, creative names for your app, startup or product using AI</p>
-    <input id="ideaInput" placeholder="e.g. app for students, coffee shop..." />
-    <button onclick="generateNames()">Generate</button>
-    <div id="results"></div>
-  </header>
 
-  <footer>Made with ❤️ using GPT-4o | <a style="color:#00d8ff;" href="https://github.com/">GitHub</a></footer>
+  <h1>NameZapAI</h1>
+  <p class="subtitle">Skapa kreativa och professionella företagsnamn med hjälp av AI.</p>
 
-  <script>
-    async function generateNames() {
-      const idea = document.getElementById('ideaInput').value;
-      const resultsDiv = document.getElementById('results');
-      resultsDiv.innerHTML = '<p>Loading suggestions...</p>';
+  <div class="input-group" role="form" aria-label="Business name generator form">
+    <input
+      id="description"
+      type="text"
+      placeholder="Beskriv din verksamhet, t.ex. Kafé, Tech-startup..."
+      aria-label="Beskriv din verksamhet"
+      autocomplete="off"
+      spellcheck="false"
+      required
+    />
+    <select id="genre" aria-label="Välj genre för namngenerering (valfritt)">
+      <option value="">-- Välj genre (valfritt) --</option>
+      <option value="Teknik">Teknik</option>
+      <option value="Mode">Mode</option>
+      <option value="Mat & Dryck">Mat & Dryck</option>
+      <option value="Utbildning">Utbildning</option>
+      <option value="Hälsa & Wellness">Hälsa & Wellness</option>
+      <option value="Finans">Finans</option>
+      <option value="Resor & Turism">Resor & Turism</option>
+      <option value="Kreativ & Design">Kreativ & Design</option>
+      <option value="Sport & Fritid">Sport & Fritid</option>
+      <option value="Miljö & Natur">Miljö & Natur</option>
+      <option value="Media & Underhållning">Media & Underhållning</option>
+    </select>
+    <button id="generateBtn" aria-live="polite" aria-disabled="false">Generera namn</button>
+  </div>
 
-      try {
-        const res = await fetch('/api/generate', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ description: idea })
-        });
+  <div id="errorMsg" role="alert" aria-live="assertive"></div>
+  <div id="loading" style="display:none;" aria-hidden="true"></div>
 
-        const data = await res.json();
+  <section id="results" aria-live="polite" aria-atomic="true" aria-label="Genererade namn kommer här"></section>
 
-        if (data.suggestions.length > 0) {
-          resultsDiv.innerHTML = '';
-          data.suggestions.forEach(name => {
-            resultsDiv.innerHTML += `<div class="name-box">${name}</div>`;
-          });
-        } else {
-          resultsDiv.innerHTML = '<p>No names found.</p>';
-        }
-      } catch (e) {
-        console.log(e);
-        resultsDiv.innerHTML = `<p>Error fetching AI results. Here's a random fallback:</p>`;
-        const fallback = [
-          "Zapster", "BrandForge", "NameNova", "GenieName", "NamePulse",
-          "AppSpark", "Zapify", "NameCrate", "ThinkZap", "BrandBot"
-        ];
-        fallback.forEach(name => {
-          resultsDiv.innerHTML += `<div class="name-box">${name}</div>`;
-        });
-      }
-    }
-  </script>
-</body>
-</html>
+<script>
+  // Elementreferenser
+  const descriptionInput = document.getElementById('description');
+  const genreSelect = document.getElementById('genre');
+  const generateBtn = document.getElementById('generateBtn');
+  const resultsDiv = document.getElementById('results');
+  const errorDiv = document.getElementById('errorMsg');
+  const loadingSpinner = document.getElementById('loading');
+
+  // Kopiera till clipboard och visa alert
+  function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).
