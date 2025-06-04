@@ -1,278 +1,177 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>NameZapAi - AI Business Name Generator</title>
-  
-  <!-- Google Fonts -->
-  <link
-    href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Roboto:wght@400;500&display=swap"
-    rel="stylesheet"
-  />
-  
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NameZapAI – Smart AI Name Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&display=swap" rel="stylesheet"/>
   <style>
-    /* ===== Reset & Base ===== */
-    *, *::before, *::after {
-      box-sizing: border-box;
-    }
     body {
       margin: 0;
-      background: linear-gradient(135deg, #3a1c71, #d76d77, #ffaf7b);
-      font-family: 'Roboto', sans-serif;
-      color: #1f2937;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 40px 20px 80px;
-      text-align: center;
-    }
-    
-    /* ===== Headings ===== */
-    h1 {
-      font-family: 'Poppins', sans-serif;
-      font-weight: 700;
-      font-size: 3.8rem;
-      margin-bottom: 0.2em;
-      letter-spacing: 5px;
+      font-family: 'Outfit', sans-serif;
+      background: linear-gradient(160deg, #0e0e0e, #1e1e2e);
       color: #ffffff;
-      text-shadow:
-        0 1px 0 #ffaf7b,
-        0 2px 0 #ff6f61,
-        0 5px 15px rgba(0,0,0,0.3);
-    }
-    p.subtitle {
-      font-weight: 500;
-      font-size: 1.25rem;
-      margin-bottom: 3em;
-      color: #f0e6e6cc;
-      max-width: 520px;
-      line-height: 1.5;
-    }
-    
-    /* ===== Form Elements ===== */
-    label {
-      display: block;
-      max-width: 460px;
-      margin: 0 auto 10px;
-      font-weight: 600;
-      font-size: 1rem;
-      color: #f9f7f7;
-      text-align: left;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-    }
-    input[type="text"],
-    select {
-      width: 100%;
-      max-width: 460px;
-      padding: 15px 18px;
-      font-size: 1.15rem;
-      border-radius: 12px;
-      border: none;
-      margin-bottom: 2em;
-      outline: none;
-      transition: box-shadow 0.3s ease;
-      font-weight: 500;
-      color: #333;
-      box-shadow: inset 2px 2px 6px #fff9, inset -2px -2px 6px #cbb;
-    }
-    input[type="text"]:focus,
-    select:focus {
-      box-shadow: 0 0 12px #ff6f61cc;
-    }
-    
-    /* Checkbox Wrapper */
-    .checkbox-wrapper {
-      max-width: 460px;
-      margin: 0 auto 2em;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #f6f4f4cc;
-      font-weight: 600;
-      user-select: none;
-      gap: 12px;
-      font-size: 1rem;
-      text-shadow: 1px 1px 1px rgba(0,0,0,0.2);
-    }
-    .checkbox-wrapper input[type="checkbox"] {
-      width: 20px;
-      height: 20px;
-      cursor: pointer;
-      filter: drop-shadow(0 0 1px rgba(0,0,0,0.3));
-    }
-    
-    /* ===== Buttons ===== */
-    .btn {
-      font-family: 'Poppins', sans-serif;
-      border: none;
-      padding: 16px 48px;
-      font-size: 1.25rem;
-      font-weight: 700;
-      border-radius: 50px;
-      cursor: pointer;
-      box-shadow: 0 6px 25px rgba(255 111 97 / 0.65);
-      user-select: none;
-      min-width: 140px;
-      margin: 0 10px 2em;
-      transition: all 0.3s ease;
-      color: white;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      position: relative;
-      overflow: hidden;
-      z-index: 1;
-    }
-    #generateBtn {
-      background: #ff6f61;
-      box-shadow: 0 6px 20px #ff6f61bb;
-    }
-    #generateBtn:hover {
-      background: #ff4a3a;
-      box-shadow: 0 10px 30px #ff4a3acc;
-      transform: scale(1.05);
-      z-index: 2;
-    }
-    #clearBtn {
-      background: #6c757d;
-      box-shadow: 0 6px 20px #6c757dbb;
-    }
-    #clearBtn:hover {
-      background: #495057;
-      box-shadow: 0 10px 30px #495057cc;
-      transform: scale(1.05);
-      z-index: 2;
-    }
-    button:disabled {
-      cursor: not-allowed;
-      background: #d3d3d3;
-      box-shadow: none;
-      color: #888;
-      transform: none;
-    }
-    
-    /* ===== Results ===== */
-    #results {
-      max-width: 460px;
-      margin: 0 auto;
       display: flex;
       flex-direction: column;
-      gap: 18px;
-      user-select: text;
-      min-height: 150px;
-      font-family: 'Poppins', sans-serif;
-    }
-    .result-item {
-      background: rgba(255 255 255 / 0.85);
-      padding: 15px 22px;
-      border-radius: 16px;
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: #3a1c71;
-      box-shadow: 0 6px 15px rgb(255 111 97 / 0.35);
-      cursor: default;
-      word-break: break-word;
-      display: flex;
-      justify-content: space-between;
       align-items: center;
-      transition: background 0.3s ease;
-      user-select: all;
-      position: relative;
+      padding: 2rem;
+      min-height: 100vh;
     }
-    .result-item:hover {
-      background: rgba(255 255 255 / 1);
+
+    h1 {
+      font-size: 3rem;
+      color: #00f5a0;
+      margin-bottom: 0.2rem;
+      text-shadow: 0 0 5px #00f5a055;
     }
-    .copy-btn {
-      background: #3a1c71;
-      border: none;
-      color: #fff;
-      font-weight: 600;
+
+    p.sub {
       font-size: 1rem;
-      padding: 6px 14px;
-      border-radius: 12px;
+      color: #aaa;
+      margin-bottom: 2rem;
+    }
+
+    .input-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+    }
+
+    input, select, button {
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      outline: none;
+    }
+
+    input, select {
+      background: #2d2d2d;
+      color: #fff;
+    }
+
+    button {
+      background: linear-gradient(135deg, #00f5a0, #00d9f5);
+      color: #000;
+      font-weight: bold;
       cursor: pointer;
-      margin-left: 16px;
-      transition: background 0.3s ease;
-      user-select: none;
-      box-shadow: 0 4px 10px #3a1c71cc;
-      min-width: 90px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
+      transition: all 0.2s;
     }
-    .copy-btn:hover {
-      background: #5e3ba2;
-      box-shadow: 0 6px 15px #5e3ba2cc;
+
+    button:hover {
+      transform: scale(1.05);
     }
-    .copy-btn:active {
-      transform: scale(0.95);
+
+    .results {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+      width: 100%;
+      max-width: 1000px;
     }
-    
-    /* ===== Footer ===== */
+
+    .name-card {
+      background: #292929;
+      border-radius: 10px;
+      padding: 1rem;
+      text-align: center;
+      transition: 0.2s;
+      cursor: pointer;
+      border: 2px solid #00f5a033;
+    }
+
+    .name-card:hover {
+      background-color: #333;
+      border-color: #00f5a0;
+    }
+
+    .loading {
+      margin-top: 2rem;
+      font-size: 1.1rem;
+      color: #aaa;
+    }
+
     footer {
       margin-top: auto;
-      color: #f0e6e6cc;
-      font-size: 0.95rem;
-      user-select: none;
-      max-width: 460px;
-      width: 100%;
-      text-align: center;
-      letter-spacing: 0.05em;
-      font-weight: 500;
-      margin-top: 50px;
-    }
-    footer a {
-      color: #f0e6e6cc;
-      text-decoration: none;
-      font-weight: 700;
-      margin: 0 14px;
-      transition: color 0.3s ease;
-    }
-    footer a:hover {
-      color: #ff6f61;
-    }
-    
-    /* ===== Responsive ===== */
-    @media (max-width: 520px) {
-      h1 {
-        font-size: 3rem;
-        letter-spacing: 3px;
-      }
-      button {
-        width: 100%;
-        margin: 0 0 1em 0;
-      }
-      #results {
-        min-height: 200px;
-      }
-      .result-item {
-        font-size: 1.4rem;
-        padding: 14px 18px;
-      }
-      .copy-btn {
-        padding: 6px 10px;
-        font-size: 0.9rem;
-        margin-left: 10px;
-        min-width: 70px;
-      }
+      padding: 1rem;
+      font-size: 0.85rem;
+      color: #888;
     }
   </style>
 </head>
 <body>
-  <h1>NameZapAi</h1>
-  <p class="subtitle">
-    AI-powered business name generator — fresh, creative & professional
-  </p>
+  <h1>NameZapAI ⚡</h1>
+  <p class="sub">Create awesome, catchy, and AI-powered brand names in seconds</p>
 
-  <label for="industryInput">Describe your business or idea (optional):</label>
-  <input
-    type="text"
-    id="industryInput"
-    placeholder="e.g. school app, coffee shop, fitness"
-    autocomplete="off"
-    spellcheck="false"
-    aria-label="Business description or idea"
-  />
+  <div class="input-group">
+    <input type="text" id="topicInput" placeholder="What's your idea about? (e.g. coffee shop)" />
+    <select id="genreSelect">
+      <option value="creative">🎨 Creative</option>
+      <option value="modern">🚀 Modern</option>
+      <option value="funny">😂 Funny</option>
+      <option value="luxury">💎 Luxury</option>
+      <option value="tech">🤖 Tech</option>
+    </select>
+    <button onclick="generateNames()">Generate</button>
+  </div>
 
-  <label for="genreSelect">Choose a name style / genre:</label>
-  <select id="genre
+  <div id="loading" class="loading" style="display: none;">✨ Generating your brand names...</div>
+  <div id="results" class="results"></div>
+
+  <footer>
+    Built with ❤️ by NameZapAI · © 2025
+  </footer>
+
+  <script>
+    const nameBank = {
+      creative: ["Nova", "Twist", "Spark", "Quirk", "Loom", "Vibe", "Zuno", "Bloop", "Orbix", "Nimble"],
+      modern: ["Zyn", "Modo", "Nexa", "Lift", "Revo", "Hexa", "Glint", "Dap", "Zentri", "Ruvo"],
+      funny: ["Wacky", "Bork", "Snappy", "Zapster", "Goofyfy", "LOLify", "Memez", "Swoosh", "Bloopify", "Zoodle"],
+      luxury: ["Noiré", "Velure", "Zéphyr", "Auryn", "Opula", "Elysian", "Serré", "Lumé", "Prestia", "Luxo"],
+      tech: ["Neurozap", "Techly", "Botcore", "Nexiq", "Codexa", "Aiogen", "Zentrix", "Bytefy", "Deepify", "Logicor"]
+    };
+
+    function generateNames() {
+      const topic = document.getElementById("topicInput").value.trim();
+      const genre = document.getElementById("genreSelect").value;
+      const resultsDiv = document.getElementById("results");
+      const loading = document.getElementById("loading");
+
+      resultsDiv.innerHTML = "";
+      loading.style.display = "block";
+
+      setTimeout(() => {
+        const base = nameBank[genre];
+        const randomNames = [];
+
+        while (randomNames.length < 12) {
+          const randomName = base[Math.floor(Math.random() * base.length)];
+          const formatted = Math.random() > 0.5
+            ? `${randomName} ${topic}`
+            : `${randomName}`;
+          if (!randomNames.includes(formatted)) {
+            randomNames.push(formatted);
+          }
+        }
+
+        loading.style.display = "none";
+
+        randomNames.forEach(name => {
+          const card = document.createElement("div");
+          card.className = "name-card";
+          card.textContent = name;
+          card.onclick = () => {
+            navigator.clipboard.writeText(name);
+            card.textContent = "✅ Copied: " + name;
+            setTimeout(() => (card.textContent = name), 1200);
+          };
+          resultsDiv.appendChild(card);
+        });
+      }, 800); // Fake loading delay
+    }
+  </script>
+</body>
+</html>
